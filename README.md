@@ -1,5 +1,5 @@
 ## Python Solution Architecture
-
+```
 ┌─────────────────┐     ┌───────────────────┐     ┌────────────────┐
 │ Input Handler   │     │ Business Logic    │     │ API Client     │
 │ - Device Reader │────>│ - Barcode Parser  │────>│ - Grocy API    │
@@ -14,7 +14,7 @@
 │ - Mappings      │     │ - LED/Display     │     │ - Error Log    │
 └─────────────────┘     └───────────────────┘     └────────────────┘
 
-
+```
 ### Implementation Notes
 
 Get your product groups, quantity units and locations ready to make barcodes with the barcode_generator util.
