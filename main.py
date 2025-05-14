@@ -45,8 +45,7 @@ class BarcodeApp:
             # Initialize Grocy client
             grocy_config = self.config.get_grocy_config()
             self.grocy = GrocyClient(
-                api_url=grocy_config['api_url'],
-                api_key=grocy_config['api_key']
+                grocy_config
             )
             
             # Initialize feedback manager

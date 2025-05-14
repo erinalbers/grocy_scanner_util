@@ -3,19 +3,21 @@ import logging
 from typing import Dict, List, Optional, Any
 
 class GrocyClient:
-    def __init__(self, api_url: str, api_key: str, config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any]):
         """Initialize connection to Grocy API
         
         Args:
             api_url: Base URL for Grocy API (e.g., http://grocy:80/api)
             api_key: API key for authentication
         """
-        self.api_url = api_url
+        self.config = config
+        self.api_url = config.get('api_url')
         self.headers = {
-            "GROCY-API-KEY": api_key,
+            "GROCY-API-KEY": config.get('api_key'),
             "Content-Type": "application/json"
         }
-        self.config = config
+        logging.debug(f"Initialized GrocyClient with API URL: {self.api_url}")
+
     
     def _make_request(self, method: str, endpoint: str, data: Dict = None) -> Dict:
         """Make a request to the Grocy API

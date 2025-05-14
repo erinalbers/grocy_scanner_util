@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 import sys
 import os
 import requests
+from config_manager import ConfigManager
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -26,8 +27,12 @@ class TestGrocyClient(unittest.TestCase):
         mock_response.content = b'{"version": "1.0.0"}'
         self.mock_requests.request.return_value = mock_response
         
+        config_manager = ConfigManager(self.config_file)
+
         # Create client
-        self.client = GrocyClient('http://grocy-test.local/api', 'test-api-key')
+        grocy_config = config_manager.get_grocy_config()
+
+        self.client = GrocyClient(grocy_config)
         
         # Reset mock to clear initialization call
         self.mock_requests.reset_mock()

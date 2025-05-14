@@ -90,8 +90,7 @@ def initialize_components(config_file):
         # Initialize Grocy client
         grocy_config = config_manager.get_grocy_config()
         grocy_client = GrocyClient(
-            api_url=grocy_config['api_url'],
-            api_key=grocy_config['api_key']
+            grocy_config
         )
         
         # Initialize feedback manager first
