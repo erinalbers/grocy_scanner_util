@@ -19,7 +19,7 @@
 
 Get your product groups, quantity units and locations ready to make barcodes with the barcode_generator util.
 
-sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+```sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
   'CREATE:LC-' || p.location_id || 
   ':GRP-' || p.product_group_id || 
   ':QT-' || p.qu_id_purchase || 
@@ -36,7 +36,7 @@ GROUP BY
   p.product_group_id, p.location_id, p.qu_id_purchase
 ORDER BY l.name ASC,
   COUNT(*) DESC;"
-
+```
 Save the file as a CSV at ./barcode_generator/CreateBundles.csv and use barcode_generator to create your QR codes (more info in barcode_generator/README.md)
 
 
