@@ -19,7 +19,8 @@
 
 Get your product groups, quantity units and locations ready to make barcodes with the barcode_generator util.
 
-```sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+```
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
   'CREATE:LC-' || p.location_id || 
   ':GRP-' || p.product_group_id || 
   ':QT-' || p.qu_id_purchase || 
