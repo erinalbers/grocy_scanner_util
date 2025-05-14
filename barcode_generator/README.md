@@ -1,99 +1,37 @@
-# Barcode Generator
+## Basic usage:
 
-A Python utility for generating barcodes from CSV data.
+Export QR images with titles into a {filename}_qr directory:
+`python3 qr_generator.py {filename}.csv`
 
-## Features
+Export a PDF file of QR codes into a file {filename}_qr.pdf file
+`python3 qr_grid.py {filename}.csv`
 
-- Generate barcodes from CSV data
-- Support for multiple barcode formats (Code128, EAN13, etc.)
-- Add custom titles to barcodes
-- Customize barcode dimensions
-- Create printable PDF grids of barcodes
+Export barcode images with titles into a {filename} directory:
+`python3 barcode_generator.py {filename}.csv `
 
-## Requirements
+Export a PDF file of barcodes with titles into a {filename}.pdf directory:
+`python3 barcode_grid.py {filename}.csv `
 
-- Python 3.6+
-- Required packages:
-  - python-barcode
-  - pillow
-  - pandas
-  - reportlab
+## Why?
 
-## Installation
+Embed commands for the grocy_scanner_util app and call on those commands by scanning the right barcode.
 
-```bash
-pip3 install python-barcode pillow pandas reportlab
-```
+Example: Scan mode changes before scanning your barcode to change the behavior of the app. By default, the barcode scanner is ready to "CONSUME" items that are scanned. 
 
-## Usage
+When it's shopping day and you want to add things to your list, scan the "SHOPPING" barcode and any items you scan will be added to your shopping list. 
 
-### Basic Usage
+When you find something has spoiled, scan the "TRASHED" mode QR code and then the product barcode to wipe the currently open items from inventory. 
 
-```bash
-python3 barcode_generator.py sample_data.csv
-```
+When you finish off a loaf of bread, scan the "FINISHED" mode and all your open inventory will be consumed. 
 
-This will read the CSV file and generate barcodes for each row, saving them in a `barcodes` directory.
+Use "CONSUME" mode to deduct the Quick Consume amount from your inventory. 
 
-### Advanced Options
+PURCHASE mode adds items back into your inventory, and if you scan the ST-{shopping_location_id} barcode you can set the store where you purchased the item. (prices and manually customized expiration dates not supported).
 
-```bash
-python3 barcode_generator.py sample_data.csv --barcode-type ean13 --output-dir my_barcodes --text-column product_code --title-column product_name --width 800 --height 400
-```
+CREATE mode has additional configurations: Ways to set Quantity (QT-), Product Category (GRP-), and Location (LC-) by scanning those QR Codes, or scanning a "bundled" QR Code with multiple tags. Example: CREATE/LC-3/GRP-9/QT-9 would configure the scanner to create a new item in Location 3, with Product Category 9, and Quantity Unit 9. In this case, if I scanned this QR code before scanning a box of pasta, I will configure new products scanned to go directly into the "Pantry" as "Dry Goods" with quantity unit "Box". Scanning the box does an "external lookup" for the box and populates the name, but the other properties have to be manually assigned. If you're scanning all of your cans at the same time, you can configure the scanning util once per product type, and then just adjust as you move along.
 
-### Creating a PDF Grid of Barcodes
+If you scan the combination for CREATE/LC-3/GRP-9/QT-9 and then scan LC-8, your scanner util is now configured with LC-8, GRP-9, QT-9 and mode CREATE. 
 
-```bash
-python3 barcode_grid.py sample_data.csv --columns 3 --page-size letter
-```
+"CLEAR-SCANNER" resets the properties in the app so that if you go from scanning the pantry to someplace else or from products at one store to another, you don't accidentally scan with the wrong values.
 
-This will generate individual barcodes and then create a PDF with the barcodes arranged in a grid layout for printing.
-
-### Command Line Arguments
-
-- `csv_file`: Path to the CSV file (required)
-- `--barcode-type`: Type of barcode to generate (default: code128)
-  - Supported types: code128, ean13, ean8, upca, isbn13, isbn10, issn, code39, pzn
-- `--output-dir`: Directory to save the barcode images (defaults to CSV filename without extension)
-- `--text-column`: Column name containing the text to encode (default: text)
-- `--title-column`: Column name containing the title text (defaults to "title" if column exists)
-- `--width`: Width of the output image (default: 800)
-- `--height`: Height of the output image (default: 400)
-
-#### Additional Options for barcode_grid.py
-
-- `--output-pdf`: Path to the output PDF file (defaults to {output_dir}_grid.pdf)
-- `--page-size`: Page size for the PDF (choices: letter, a4, default: letter)
-- `--margin`: Margin in inches (default: 0.5)
-- `--columns`: Number of columns in the grid (default: 2)
-- `--spacing`: Spacing between barcodes in inches (default: 0.2)
-- `--label-height`: Height of each label in inches (optional)
-
-## CSV Format
-
-The CSV file should contain at least one column with the text to encode in the barcode. Optionally, it can include a column for the title text.
-
-Example:
-
-```csv
-text,title
-123456789012,Product A
-987654321098,Product B
-```
-
-## Examples
-
-Generate barcodes using the default settings:
-```bash
-python3 barcode_generator.py data.csv
-```
-
-Generate EAN-13 barcodes with custom dimensions:
-```bash
-python3 barcode_generator.py data.csv --barcode-type ean13 --width 800 --height 400
-```
-
-Use custom column names:
-```bash
-python3 barcode_generator.py products.csv --text-column product_id --title-column product_name
-```
+The barcode and QR generators create those configuration codes in printable sheets so you can reference them as you go through your inventory.
