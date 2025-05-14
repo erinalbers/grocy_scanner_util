@@ -1,0 +1,165 @@
+text,title
+CREATE,Create New Product
+PURCHASE,Add Item to Inventory
+CONSUME,Consume Item
+SHOPPING,Add Item to Shopping List
+OPEN,Open Item In Inventory
+FINISH,Consume Remaining Open Quantity
+EXPIRE,Expire All (Trash Inventory)
+CLEAR-SCANNER,Reset Configurations
+CREATE/LC-7/GRP-4/QT-14,"Chest Freezer, Baked Goods, Item"
+CREATE/LC-7/GRP-13/QT-9,"Chest Freezer, Frozen Foods, Bag"
+CREATE/LC-7/GRP-13/QT-19,"Chest Freezer, Frozen Foods, Box"
+CREATE/LC-7/GRP-13/QT-14,"Chest Freezer, Frozen Foods, Item"
+CREATE/LC-7/GRP-13/QT-18,"Chest Freezer, Frozen Foods, Oz"
+CREATE/LC-7/GRP-2/QT-9,"Chest Freezer, Meats, Bag"
+CREATE/LC-7/GRP-14/QT-18,"Chest Freezer, Surplus, Oz"
+CREATE/LC-7/GRP-14/QT-7,"Chest Freezer, Surplus, Serving"
+CREATE/LC-9/GRP-4/QT-14,"Countertop, Baked Goods, Item"
+CREATE/LC-9/GRP-15/QT-13,"Countertop, Baking/Cooking, Gram"
+CREATE/LC-9/GRP-15/QT-18,"Countertop, Baking/Cooking, Oz"
+CREATE/LC-9/GRP-6/QT-8,"Countertop, Beverages, Bottle"
+CREATE/LC-9/GRP-1/QT-6,"Countertop, Produce, Carton"
+CREATE/LC-9/GRP-1/QT-14,"Countertop, Produce, Item"
+CREATE/LC-4/GRP-15/QT-4,"Cupboard, Baking/Cooking, Can"
+CREATE/LC-4/GRP-15/QT-13,"Cupboard, Baking/Cooking, Gram"
+CREATE/LC-4/GRP-15/QT-17,"Cupboard, Baking/Cooking, Lb"
+CREATE/LC-4/GRP-15/QT-18,"Cupboard, Baking/Cooking, Oz"
+CREATE/LC-4/GRP-15/QT-15,"Cupboard, Baking/Cooking, Fl Oz"
+CREATE/LC-4/GRP-12/QT-8,"Cupboard, Condiments, Bottle"
+CREATE/LC-4/GRP-12/QT-18,"Cupboard, Condiments, Oz"
+CREATE/LC-4/GRP-9/QT-19,"Cupboard, Dry Goods, Box"
+CREATE/LC-4/GRP-9/QT-17,"Cupboard, Dry Goods, Lb"
+CREATE/LC-4/GRP-11/QT-8,"Cupboard, Household Supplies, Bottle"
+CREATE/LC-4/GRP-11/QT-19,"Cupboard, Household Supplies, Box"
+CREATE/LC-4/GRP-11/QT-14,"Cupboard, Household Supplies, Item"
+CREATE/LC-4/GRP-11/QT-3,"Cupboard, Household Supplies, Pack"
+CREATE/LC-4/GRP-8/QT-9,"Cupboard, Snacks, Bag"
+CREATE/LC-4/GRP-8/QT-19,"Cupboard, Snacks, Box"
+CREATE/LC-12/GRP-2/QT-17,"Garage Refrigerator Freezer, Meats, Lb"
+CREATE/LC-8/GRP-6/QT-8,"Garage Storage, Beverages, Bottle"
+CREATE/LC-8/GRP-10/QT-9,"Garage Storage, Pets, Bag"
+CREATE/LC-10/GRP-1/QT-5,"Hanging Produce, Produce, Bunch"
+CREATE/LC-10/GRP-1/QT-14,"Hanging Produce, Produce, Item"
+CREATE/LC-10/GRP-1/QT-17,"Hanging Produce, Produce, Lb"
+CREATE/LC-6/GRP-2/QT-9,"Meat Freezer, Meats, Bag"
+CREATE/LC-6/GRP-2/QT-14,"Meat Freezer, Meats, Item"
+CREATE/LC-6/GRP-2/QT-17,"Meat Freezer, Meats, Lb"
+CREATE/LC-6/GRP-2/QT-18,"Meat Freezer, Meats, Oz"
+CREATE/LC-6/GRP-2/QT-3,"Meat Freezer, Meats, Pack"
+CREATE/LC-3/GRP-4/QT-14,"Pantry, Baked Goods, Item"
+CREATE/LC-3/GRP-15/QT-8,"Pantry, Baking/Cooking, Bottle"
+CREATE/LC-3/GRP-15/QT-13,"Pantry, Baking/Cooking, Gram"
+CREATE/LC-3/GRP-15/QT-17,"Pantry, Baking/Cooking, Lb"
+CREATE/LC-3/GRP-15/QT-18,"Pantry, Baking/Cooking, Oz"
+CREATE/LC-3/GRP-15/QT-15,"Pantry, Baking/Cooking, Fl Oz"
+CREATE/LC-3/GRP-3/QT-4,"Pantry, Canned Goods, Can"
+CREATE/LC-3/GRP-3/QT-10,"Pantry, Canned Goods, Jar"
+CREATE/LC-3/GRP-3/QT-18,"Pantry, Canned Goods, Oz"
+CREATE/LC-3/GRP-3/QT-15,"Pantry, Canned Goods, Fl Oz"
+CREATE/LC-3/GRP-3/QT-7,"Pantry, Canned Goods, Serving"
+CREATE/LC-3/GRP-12/QT-8,"Pantry, Condiments, Bottle"
+CREATE/LC-3/GRP-12/QT-10,"Pantry, Condiments, Jar"
+CREATE/LC-3/GRP-12/QT-18,"Pantry, Condiments, Oz"
+CREATE/LC-3/GRP-12/QT-15,"Pantry, Condiments, Fl Oz"
+CREATE/LC-3/GRP-9/QT-9,"Pantry, Dry Goods, Bag"
+CREATE/LC-3/GRP-9/QT-19,"Pantry, Dry Goods, Box"
+CREATE/LC-3/GRP-9/QT-6,"Pantry, Dry Goods, Carton"
+CREATE/LC-3/GRP-9/QT-14,"Pantry, Dry Goods, Item"
+CREATE/LC-3/GRP-9/QT-17,"Pantry, Dry Goods, Lb"
+CREATE/LC-3/GRP-9/QT-18,"Pantry, Dry Goods, Oz"
+CREATE/LC-3/GRP-9/QT-3,"Pantry, Dry Goods, Pack"
+CREATE/LC-3/GRP-9/QT-7,"Pantry, Dry Goods, Serving"
+CREATE/LC-3/GRP-9/QT-24,"Pantry, Dry Goods, Tub"
+CREATE/LC-3/GRP-9/QT-20,"Pantry, Dry Goods, kg"
+CREATE/LC-3/GRP-2/QT-4,"Pantry, Meats, Can"
+CREATE/LC-3/GRP-1/QT-17,"Pantry, Produce, Lb"
+CREATE/LC-3/GRP-8/QT-18,"Pantry, Snacks, Oz"
+CREATE/LC-3/GRP-16/QT-8,"Pantry, Spices, Bottle"
+CREATE/LC-3/GRP-16/QT-13,"Pantry, Spices, Gram"
+CREATE/LC-3/GRP-16/QT-10,"Pantry, Spices, Jar"
+CREATE/LC-3/GRP-16/QT-18,"Pantry, Spices, Oz"
+CREATE/LC-3/GRP-16/QT-2,"Pantry, Spices, Piece"
+CREATE/LC-2/GRP-6/QT-16,"Refrigerator, Beverages, Liter"
+CREATE/LC-2/GRP-12/QT-18,"Refrigerator, Condiments, Oz"
+CREATE/LC-2/GRP-2/QT-14,"Refrigerator, Meats, Item"
+CREATE/LC-2/GRP-2/QT-17,"Refrigerator, Meats, Lb"
+CREATE/LC-2/GRP-2/QT-18,"Refrigerator, Meats, Oz"
+CREATE/LC-2/GRP-1/QT-9,"Refrigerator, Produce, Bag"
+CREATE/LC-2/GRP-1/QT-19,"Refrigerator, Produce, Box"
+CREATE/LC-2/GRP-1/QT-5,"Refrigerator, Produce, Bunch"
+CREATE/LC-2/GRP-1/QT-14,"Refrigerator, Produce, Item"
+CREATE/LC-2/GRP-1/QT-17,"Refrigerator, Produce, Lb"
+CREATE/LC-2/GRP-1/QT-18,"Refrigerator, Produce, Oz"
+CREATE/LC-2/GRP-1/QT-7,"Refrigerator, Produce, Serving"
+CREATE/LC-2/GRP-5/QT-19,"Refrigerator, Cold Goods, Box"
+CREATE/LC-2/GRP-5/QT-6,"Refrigerator, Cold Goods, Carton"
+CREATE/LC-2/GRP-5/QT-12,"Refrigerator, Cold Goods, Cup"
+CREATE/LC-2/GRP-5/QT-11,"Refrigerator, Cold Goods, Gallon"
+CREATE/LC-2/GRP-5/QT-18,"Refrigerator, Cold Goods, Oz"
+CREATE/LC-2/GRP-5/QT-15,"Refrigerator, Cold Goods, Fl Oz"
+CREATE/LC-2/GRP-5/QT-24,"Refrigerator, Cold Goods, Tub"
+CREATE/LC-2/GRP-16/QT-19,"Refrigerator, Spices, Box"
+CREATE/LC-2/GRP-16/QT-14,"Refrigerator, Spices, Item"
+CREATE/LC-2/GRP-14/QT-7,"Refrigerator, Surplus, Serving"
+CREATE/LC-11/GRP-13/QT-9,"Refrigerator Freezer, Frozen Foods, Bag"
+CREATE/LC-11/GRP-13/QT-19,"Refrigerator Freezer, Frozen Foods, Box"
+CREATE/LC-11/GRP-13/QT-14,"Refrigerator Freezer, Frozen Foods, Item"
+ST-9,Albertsons
+ST-3,Costco
+ST-11,Farm
+ST-5,Grocery Outlet
+ST-6,Grove.com
+ST-10,Lowe's
+ST-7,Nespresso.com
+ST-8,Petco
+ST-4,Roths
+ST-2,Safeway
+ST-1,Winco
+ST-12,Wilco Farm Store
+ST-13,Wal-Mart
+GRP-4,Baked Goods
+GRP-15,Baking & Cooking
+GRP-6,Beverages
+GRP-3,Canned Goods
+GRP-12,Condiments
+GRP-9,Dry Goods
+GRP-13,Frozen Foods
+GRP-11,Household
+GRP-2,Meats
+GRP-10,Pets
+GRP-1,Produce
+GRP-5,Refrigerated Goods
+GRP-8,Snacks
+GRP-16,Spices
+GRP-14,Surplus
+GRP-7,Sweets
+QT-9,Bag
+QT-8,Bottle
+QT-19,Box
+QT-5,Bunch
+QT-4,Can
+QT-6,Carton
+QT-12,Cup
+QT-11,Gallon
+QT-14,Item
+QT-10,Jar
+QT-17,Lb
+QT-16,Liter
+QT-18,Ounce-Wt
+QT-3,Pack
+QT-7,Serving
+QT-23,Sprig
+LC-7,Chest Freezer
+LC-9,Countertop
+LC-4,Cupboard
+LC-5,Garage Refrigerator
+LC-12,Garage Refrigerator Freezer
+LC-8,Garage Storage
+LC-10,Hanging Produce
+LC-6,Meat Freezer
+LC-3,Pantry
+LC-2,Refrigerator
+LC-11,Refrigerator Freezer
+LC-13,Spice Cabinet
+

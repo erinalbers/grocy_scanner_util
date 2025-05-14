@@ -1,0 +1,7 @@
+requests>=2.25.0
+pyyaml>=5.4.0
+evdev>=1.4.0  # For USB HID mode
+pyserial>=3.5  # For SPP mode
+python-dotenv>=0.15.0
+pydantic>=1.8.0
+loguru>=0.5.3

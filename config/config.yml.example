@@ -1,0 +1,48 @@
+# Barcode Scanner Configuration
+
+# Scanner settings
+scanner:
+  # Connection type: usb_hid, bluetooth_hid, spp, or sdk
+  connection_type: usb_hid
+  
+  # Set to true to run without physical scanner hardware
+  test_mode: false
+  
+  # Device settings for USB HID mode
+  usb_hid:
+    # Leave empty to auto-detect, or specify device path like /dev/input/event0
+    device_path: ""
+    
+  # Device settings for Bluetooth
+  bluetooth:
+    mac_address: ""
+    port: 1
+
+# Grocy API settings
+grocy:
+  # These can be overridden by environment variables
+  api_url: "http://grocy-host:8080/api"
+  api_key: "your-api-key-here"
+  
+# Action mappings - define what happens based on barcode prefixes
+actions:
+  # Default action if no prefix matches
+  default: "lookup"
+  
+# Feedback settings
+feedback:
+  # Enable/disable different feedback types
+  audio: true
+  visual: true
+  
+  # Audio settings
+  audio_success: "/app/sounds/success.wav"
+  audio_error: "/app/sounds/error.wav"
+  audio_waiting: "/app/sounds/waiting.wav"
+
+# Logging settings
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "/app/logs/barcode_scanner.log"
+  max_size_mb: 10
+  backup_count: 5

@@ -1,0 +1,39 @@
+services:
+  grocy-scanner-util:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grocy-scanner-util
+    restart: unless-stopped
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./sounds:/app/sounds
+      # - ./scanner_lib:/app/scanner_lib # Put your barcode scanner SDK files here for use in feedback_manager.py
+      - /dev/input/event12:/dev/input/event12:ro # Mount the USB device for barcode scanner access if using USB HID mode
+    environment:
+      - CONFIG_FILE=/app/config/config.yml
+      - GROCY_API_URL=${GROCY_API_URL} # Point to your existing Grocy instance - adjust URL as needed
+      - GROCY_API_KEY=${GROCY_API_KEY}
+      - LOG_LEVEL=INFO
+      - TEST_MODE=${TEST_MODE:-false} # Enable test mode to run without physical scanner
+    group_add:
+      - "996"  # This is the input group ID from your system
+    devices:
+      - /dev/input/event12:/dev/input/event12 # try cat /proc/bus/input/devices, find your device and look at the Handlers sectio for the proper event
+    privileged: true  # Uncomment if needed for USB device access
+    # Connect to the same network as your Grocy container
+    # You may need to use external network configuration if Grocy is on a different compose stack
+    networks:
+      - default
+      - grocy-network
+    ports:
+      - "5000:5000"  # Expose API port for test interface
+
+networks:
+  default:
+    driver: bridge
+  grocy-network:
+    external: true
+    # Use the name of the network where your Grocy container is running
+    name: grocy_default
