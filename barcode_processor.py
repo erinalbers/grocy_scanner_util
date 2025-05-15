@@ -309,8 +309,13 @@ class BarcodeProcessor:
                 group = self.group if self.group is not False else result.get("product_group_id")
                 store = self.store if self.store is not False else result.get("shopping_location_id")
 
-                product = self.grocy_client.create_product(result["name"], barcode, result["name"], quantity, location, group, store)
-                self.feedback_manager.success(f"Created product ID: {product['id']} with name {product['name']}")
+                try:
+                    product = self.grocy_client.create_product(result["name"], barcode, result["name"], quantity, location, group, store)
+                    prod_id = product.get('created_object_id')
+                    name = result.get("name")
+                    self.feedback_manager.success("Created product ID: {prod_id} with name {name}")
+                except Exception as e:
+                    logging.error(f"Error in external lookup product creation: {e}")
 
         else:
             error_msg = f"Unsupported action: {action}"
