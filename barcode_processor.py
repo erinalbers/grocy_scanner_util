@@ -313,7 +313,7 @@ class BarcodeProcessor:
                     product = self.grocy_client.create_product(result["name"], barcode, result["name"], quantity, location, group, store)
                     prod_id = product.get('created_object_id')
                     name = result.get("name")
-                    self.feedback_manager.success("Created product ID: {prod_id} with name {name}")
+                    self.feedback_manager.success(f"Created product ID: {prod_id} with name {name}")
                 except Exception as e:
                     logging.error(f"Error in external lookup product creation: {e}")
 

@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 .env
 config/config.yml
+barcode_scanner.log

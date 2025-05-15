@@ -149,3 +149,7 @@ In config/automations.yml - you will need to get the entity ID of your own media
 ```
 
 I have limited understanding of HomeAssistant but this worked for me!
+
+### Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request or make a feature request, or you can also drop "appreciation" at http://buymeacoffee.com/erinalbers if you want your contribution to be more... inspirational.
