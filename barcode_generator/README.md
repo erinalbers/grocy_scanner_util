@@ -12,6 +12,64 @@ Export barcode images with titles into a {filename} directory:
 Export a PDF file of barcodes with titles into a {filename}.pdf directory:
 `python3 barcode_grid.py {filename}.csv `
 
+## How can I get the data for the files?
+
+If you have access to your Grocy data you can run the below sql commands:
+
+```
+# sqlite command to get CreateBundles.csv data from your Grocy DB:
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+  'CREATE:LC-' || p.location_id || 
+  ':GRP-' || p.product_group_id || 
+  ':QT-' || p.qu_id_purchase || 
+  ',\"' || l.name || ', ' || pg.name || ', ' || qu.name || '\"' AS scan_csv_data
+FROM 
+  products p
+JOIN 
+  product_groups pg ON p.product_group_id = pg.id
+JOIN 
+  locations l ON p.location_id = l.id
+JOIN 
+  quantity_units qu ON p.qu_id_purchase = qu.id
+GROUP BY 
+  p.product_group_id, p.location_id, p.qu_id_purchase
+ORDER BY l.name ASC,
+  COUNT(*) DESC;"
+```
+Save the output as a CSV at ./barcode_generator/CreateBundles.csv and use barcode_generator to create your QR codes (more info in barcode_generator/README.md)
+
+```
+# sqlite command to get Store.csv data from your Grocy DB:
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+  'ST-' || t.id || ',' || t.name AS scan_csv_data
+FROM 
+  shopping_locations as t
+ORDER BY t.name ASC"
+
+# sqlite command to get Location.csv data from your Grocy DB:
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+  'LC-' || t.id || ',' || t.name AS scan_csv_data
+FROM 
+  locations as t
+ORDER BY t.name ASC"
+
+# sqlite command to get Quantity.csv data from your Grocy DB:
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+  'QT-' || t.id || ',' || t.name AS scan_csv_data
+FROM 
+  quantity_units as t
+ORDER BY t.name ASC"
+
+# sqlite command to get Category.csv data from your Grocy DB:
+sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
+  'GRP-' || t.id || ',' || t.name AS scan_csv_data
+FROM 
+  product_groups as t
+ORDER BY t.name ASC"
+```
+
+If not, there are some sample files that you can modify. Note: Be sure to leave the text,title at the top of the CSV.
+
 ## Why?
 
 Embed commands for the grocy_scanner_util app and call on those commands by scanning the right barcode.

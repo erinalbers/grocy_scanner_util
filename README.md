@@ -17,29 +17,9 @@
 ```
 ### Implementation Notes
 
-Get your product groups, quantity units and locations ready to make barcodes with the barcode_generator util.
+This utility makes it possible to have a "headless" scanner inputting data into Grocy. With no need to keep your phone or computer available, no need to pull up an app or website, it's easier to just get a quick scan for your daily consumption or quickly go through your inventory looking for things to refresh before heading to the store. 
 
-```
-sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
-  'CREATE:LC-' || p.location_id || 
-  ':GRP-' || p.product_group_id || 
-  ':QT-' || p.qu_id_purchase || 
-  ',\"' || l.name || ', ' || pg.name || ', ' || qu.name || '\"' AS 'text,title'
-FROM 
-  products p
-JOIN 
-  product_groups pg ON p.product_group_id = pg.id
-JOIN 
-  locations l ON p.location_id = l.id
-JOIN 
-  quantity_units qu ON p.qu_id_purchase = qu.id
-GROUP BY 
-  p.product_group_id, p.location_id, p.qu_id_purchase
-ORDER BY l.name ASC,
-  COUNT(*) DESC;"
-```
-Save the file as a CSV at ./barcode_generator/CreateBundles.csv and use barcode_generator to create your QR codes (more info in barcode_generator/README.md)
-
+Get your scanner commands, product groups, quantity units and locations set up as barcodes with the barcode_generator util. See the README at ./barcode_generator/README.md for more info.
 
 ### Class Definitions
 
