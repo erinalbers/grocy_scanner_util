@@ -512,18 +512,24 @@ class BarcodeProcessor:
 
         if action == 'consume':
             stockcheck = self.get_consume_quantity(product, quantity)
-            result = self.grocy_client.consume_product(product_id, stockcheck.consume_quantity)
-            self.feedback_manager.consume(f"Consumed {self.get_quantity_with_unit_type(product,stockcheck.consume_quantity)} of {product_data['name']}")
+            consume_quantity = stockcheck.get('consume_quantity')
+            total_quantity = stockcheck.get('total_quantity')
+            result = self.grocy_client.consume_product(product_id, consume_quantity)
+            self.feedback_manager.consume(f"Consumed {self.get_quantity_with_unit_type(product,consume_quantity)} of {total_quantity} {product_data['name']}")
 
         elif action == 'finish':
             stockcheck = self.get_consume_open_quantity(product, quantity)
-            result = self.grocy_client.consume_product(product_id, stockcheck.consume_quantity)
-            self.feedback_manager.consume(f"Consumed {self.get_quantity_with_unit_type(product,stockcheck.consume_quantity)}  of {product_data['name']}")
+            consume_quantity = stockcheck.get('consume_quantity')
+            total_quantity = stockcheck.get('total_quantity')
+            result = self.grocy_client.consume_product(product_id,consume_quantity)
+            self.feedback_manager.consume(f"Consumed {self.get_quantity_with_unit_type(product,consume_quantity)} of {total_quantity} {product_data['name']}")
 
         elif action == 'expire':
             stockcheck = self.get_consume_expired_quantity(product, quantity)
-            result = self.grocy_client.trash_product(product_id, stockcheck.consume_quantity)
-            self.feedback_manager.consume(f"Trashed {self.get_quantity_with_unit_type(product,stockcheck.consume_quantity)}  of {product_data['name']}")
+            consume_quantity = stockcheck.get('consume_quantity')
+            total_quantity = stockcheck.get('total_quantity')
+            result = self.grocy_client.trash_product(product_id,consume_quantity)
+            self.feedback_manager.consume(f"Trashed {self.get_quantity_with_unit_type(product,consume_quantity)} of {total_quantity} {product_data['name']}")
 
         elif action == 'shopping':
             result = self.grocy_client.add_to_shopping_list(product_id, quantity)
@@ -531,17 +537,22 @@ class BarcodeProcessor:
 
         elif action == 'open':
             stockcheck = self.get_open_quantity(product, barcode, quantity)
-            result = self.grocy_client.open_product(product_id, stockcheck.open_quantity)
-            self.feedback_manager.open(f"Opened {self.get_quantity_with_unit_type(product,stockcheck.open_quantity)} {product_data['name']}")
+            open_quantity = stockcheck.get('open_quantity')
+            result = self.grocy_client.open_product(product_id, open_quantity)
+            self.feedback_manager.open(f"Opened {self.get_quantity_with_unit_type(product,open_quantity)} {product_data['name']}")
 
         elif action == 'purchase':
             stockcheck = self.get_purchase_quantity(product, barcode, quantity)
-            result = self.grocy_client.purchase_product(product_id, stockcheck.purchase_quantity)
-            self.feedback_manager.success(f"Added {self.get_quantity_with_unit_type(product,stockcheck.purchase_quantity)} {product_data['name']} to inventory")
+            logging.debug(f"Purchase quantity: {stockcheck}")
+            purchase_quantity = stockcheck.get('purchase_quantity')
+            total_quantity = stockcheck.get('total_quantity')
+            logging.debug(f"Purchase quantity: {purchase_quantity}")
+            result = self.grocy_client.purchase_product(product_id, purchase_quantity)
+            self.feedback_manager.success(f"Added {self.get_quantity_with_unit_type(product,purchase_quantity)} to {total_quantity} {product_data['name']} to inventory")
 
         else:
             error_msg = f"Unsupported action: {action}"
-            self.feedback_manager.error(error_msg)
+            self.feedback_manager.error(toggleBreak+error_msg)
             raise ValueError(error_msg)
             
         # Ensure result is a dictionary
