@@ -419,24 +419,27 @@ class BarcodeProcessor:
         """
         # Check for quick_purchase_amount
         product_data = product.get("product", product)
-        purchase_quantity = product_data.get("quick_purchase_amount",0)
-        stock_amount = product.get("stock_amount",0)
+        purchase_quantity = float(product_data.get("quick_purchase_amount",0) or 0)
+        logging.info(f"Setting default purchase quantity for product: {purchase_quantity}")
+        stock_amount = float(product.get("stock_amount",0) or 0)
 
         barcodes = product.get("product_barcodes",[])
         for barcode_data in barcodes:
             if barcode_data.get("barcode") == barcode:
-                purchase_quantity = barcode_data.get("amount",0)
-                logging.debug(f"Setting custom purchase quantity for barcode {barcode}: {purchase_quantity}")
+                purchase_quantity = float(barcode_data.get("amount",0) or 0)
+                logging.info(f"Setting custom purchase quantity for barcode {barcode}: {purchase_quantity}")
                 break
+            
+        logging.info(f"Product Data: {product_data}, Barcodes: {barcodes}")
 
         # Handle None values safely
-        if purchase_quantity == 0:
+        if purchase_quantity == 0 or purchase_quantity is None:
             purchase_quantity = quantity  # Default to 1 if quick_purchase_amount is not set
             
         logging.info(f"Purchase: {purchase_quantity}, Stock Amount: {stock_amount}")
 
         return {
-            "purchase_quantity": purchase_quantity,
+            "purchase_quantity": purchase_quantity or quantity,
             "total_quantity": stock_amount
         }
     
@@ -452,24 +455,24 @@ class BarcodeProcessor:
         
         # Check for quick_purchase_amount
         product_data = product.get("product", product)
-        open_quantity = product_data.get("quick_open_amount",0)
+        open_quantity = float(product_data.get("quick_open_amount",0) or 0)
         stock_amount = product.get("stock_amount",0)
 
         barcodes = product.get("product_barcodes",[])
         for barcode_data in barcodes:
             if barcode_data.get("barcode") == barcode:
-                open_quantity = barcode_data.get("amount",0)
+                open_quantity = float(barcode_data.get("amount",0) or 0)
                 logging.debug(f"Setting custom open quantity for barcode {barcode}: {open_quantity}")
                 break
 
         # Handle None values safely
-        if open_quantity == 0:
+        if open_quantity == 0 or open_quantity is None:
             open_quantity = quantity  # Default to 1 if quick_purchase_amount is not set
 
         logging.info(f"Purchase: {open_quantity}, Stock Amount: {stock_amount}")
 
         return {
-            "open_quantity": open_quantity,
+            "open_quantity": open_quantity or quantity,
             "total_quantity": stock_amount
         }
     
