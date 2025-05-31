@@ -443,6 +443,45 @@ class BarcodeProcessor:
             "total_quantity": stock_amount
         }
     
+    def get_shopping_quantity(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
+        """Determine the quantity to purchase based on product data
+
+        Args:
+            product: Product data
+
+        Returns:
+            Quantity to add to shopping list
+        """
+        # Check for quick_purchase_amount
+        product_data = product.get("product", product)
+        logging.debug(f"Product: {product}")
+        logging.debug(f"Product data: {product_data}")
+        qu_conversion_factor_purchase_to_stock = int(product.get("qu_conversion_factor_purchase_to_stock",1) or 1)
+        shopping_quantity = quantity * qu_conversion_factor_purchase_to_stock
+        
+        logging.debug(f"Setting default shopping quantity for product: {shopping_quantity} with conversion {qu_conversion_factor_purchase_to_stock} and quantity {quantity}")
+        stock_amount = float(product.get("stock_amount",0) or 0)
+
+        barcodes = product.get("product_barcodes",[])
+        for barcode_data in barcodes:
+            if barcode_data.get("barcode") == barcode:
+                purchase_quantity = float(barcode_data.get("amount",0) or 0)
+                logging.info(f"Setting custom shopping quantity for barcode {barcode}: {shopping_quantity}")
+                break
+            
+        logging.info(f"Product Data: {product_data}, Barcodes: {barcodes}")
+
+        # Handle None values safely
+        if shopping_quantity == 0 or shopping_quantity is None:
+            shopping_quantity = quantity  # Default to 1 if quick_purchase_amount is not set
+            
+        logging.info(f"Shopping: {shopping_quantity}, Stock Amount: {stock_amount}")
+
+        return {
+            "shopping_quantity": shopping_quantity or quantity,
+            "total_quantity": stock_amount
+        }
+    
     def get_open_quantity(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
         """Determine the quantity to purchase based on product data
 
@@ -535,7 +574,11 @@ class BarcodeProcessor:
             self.feedback_manager.consume(f"Trashed {self.get_quantity_with_unit_type(product,consume_quantity)} of {total_quantity} {product_data['name']}")
 
         elif action == 'shopping':
-            result = self.grocy_client.add_to_shopping_list(product_id, quantity)
+            stockcheck = self.get_shopping_quantity(product, barcode, quantity)
+            logging.debug(f"Shopping quantity: {stockcheck}")
+            shopping_quantity = stockcheck.get('shopping_quantity')
+            logging.debug(f"Shopping quantity: {shopping_quantity}")
+            result = self.grocy_client.add_to_shopping_list(product_id, shopping_quantity)
             self.feedback_manager.shopping(f"Added {product_data['name']} to shopping list")
 
         elif action == 'open':
