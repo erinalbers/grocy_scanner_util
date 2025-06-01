@@ -19,9 +19,9 @@ If you have access to your Grocy data you can run the below sql commands:
 ```
 # sqlite command to get CreateBundles.csv data from your Grocy DB:
 sqlite3 ~/codebases/grocy/config/data/grocy.db "SELECT 
-  'CREATE:LC-' || p.location_id || 
-  ':GRP-' || p.product_group_id || 
-  ':QT-' || p.qu_id_purchase || 
+  'CREATE/LC-' || p.location_id || 
+  '/GRP-' || p.product_group_id || 
+  '/QT-' || p.qu_id_purchase || 
   ',\"' || l.name || ', ' || pg.name || ', ' || qu.name || '\"' AS scan_csv_data
 FROM 
   products p
@@ -31,9 +31,10 @@ JOIN
   locations l ON p.location_id = l.id
 JOIN 
   quantity_units qu ON p.qu_id_purchase = qu.id
+WHERE l.id = 2 -- optionally filtering results by location
 GROUP BY 
   p.product_group_id, p.location_id, p.qu_id_purchase
-ORDER BY l.name ASC,
+ORDER BY pg.name ASC, qu.name ASC, 
   COUNT(*) DESC;"
 ```
 Save the output as a CSV at ./barcode_generator/CreateBundles.csv and use barcode_generator to create your QR codes (more info in barcode_generator/README.md)

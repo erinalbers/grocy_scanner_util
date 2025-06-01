@@ -324,3 +324,22 @@ class GrocyClient:
             List of quantity units
         """
         return self._make_request("GET", "/objects/shopping_locations/"+item_id)
+    
+    def get_quantity_unit_conversions(self, item_id: int) -> List[Dict[str, Any]]:
+        """Get quantity unit conversions for a product."""
+        logging.info("/objects/quantity_unit_conversions?query[]product_id="+str(item_id))
+        return self._make_request("GET", f"/objects/quantity_unit_conversions?query%5B%5D=product_id%3D{str(item_id)}")
+
+        # try:
+        #     response = requests.get(
+        #         f"{self.api_url}/objects/quantity_unit_conversions", 
+        #         headers=self.headers,
+        #         params={"query[]": f"product_id={product_id}"}
+        #     )
+        #     response.raise_for_status()
+        #     conversions = response.json()
+        #     logger.debug(f"Quantity unit conversions for product {product_id}: {json.dumps(conversions, indent=2)}")
+        #     return conversions
+        # except Exception as e:
+        #     logger.error(f"Failed to get quantity unit conversions for product {product_id}: {e}")
+        #     return []

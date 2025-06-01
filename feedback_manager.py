@@ -138,6 +138,15 @@ class FeedbackManager:
         if message:
             logging.info(f"{message}")
     
+    def getinfo(self, message: Optional[str] = None) -> None:
+        """Provide product information
+        
+        Args:
+            message: Optional message to log
+        """
+        if message:
+            logging.info(f"{message}")
+    
     def unknown_product(self, message: Optional[str] = None) -> None:
         """Provide feedback for unknown products
         

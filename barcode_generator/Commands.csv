@@ -4,6 +4,7 @@ PURCHASE,Add Item to Inventory
 CONSUME,Consume Item
 SHOPPING,Add Item to Shopping List
 OPEN,Open Item In Inventory
+GETINFO,Get Product Info
 FINISH,Consume Remaining Open Quantity
 EXPIRE,Expire All (Trash Inventory)
 CLEAR-SCANNER,Reset Configurations

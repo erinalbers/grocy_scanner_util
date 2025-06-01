@@ -30,6 +30,7 @@ class BarcodeProcessor:
             'shopping': 'shopping',
             'create': 'create',
             'open': 'open',
+            'getinfo': 'getinfo',
             'expire': 'expire',
             'clear-scanner' : 'clear-scanner',
         }
@@ -187,7 +188,7 @@ class BarcodeProcessor:
             # For other modes, look up the product in Grocy
             if not product_exists:
                 # Product not found and we're not in create mode
-                error_msg = f"Product not found with that barcode. Please create the product first."
+                error_msg = f"Product not found with that barcode. Please create the product first: {actual_barcode}"
                 self.feedback_manager.unknown_product(error_msg)
                 return {
                     "action": action,
@@ -324,6 +325,54 @@ class BarcodeProcessor:
 
         return result
     
+    def find_conversion_factor(self, product: Dict[str, Any], from_qu_id: int, to_qu_id: int) -> Optional[float]:
+        """
+        Find a conversion factor between two quantity units.
+
+        Args:
+            product: The product details
+            from_qu_id: Source quantity unit ID
+            to_qu_id: Target quantity unit ID
+
+        Returns:
+            Conversion factor or None if not found
+        """
+        logging.debug(product)
+        conversions = self.grocy_client.get_quantity_unit_conversions(product.get('product',{}).get('id'))
+        logging.debug(f"Conversions: {conversions}")
+        
+        # Try to find conversion (direct or indirect)
+        conversion = self._find_conversion_factor_from_list(
+            conversions,
+            from_qu_id,
+            to_qu_id
+        )
+        
+        if conversion is not None:
+            logging.debug(f"Conversion found: {conversion}")
+            return conversion
+
+        logging.debug(f"No conversion factor found from {from_qu_id} to {to_qu_id}")
+        return None
+    
+    def _find_conversion_factor_from_list(self, conversions, from_qu_id, to_qu_id, visited=None, current_factor=1.0):
+        if visited is None:
+            visited = set()
+
+        if from_qu_id == to_qu_id:
+            return current_factor
+
+        visited.add(from_qu_id)
+
+        for conv in conversions:
+            if conv["from_qu_id"] == from_qu_id and conv["to_qu_id"] not in visited:
+                factor = conv["factor"]
+                result = self._find_conversion_factor_from_list(conversions, conv["to_qu_id"], to_qu_id, visited.copy(), current_factor * factor)
+                if result is not None:
+                    return result
+
+        return None
+    
     def get_consume_quantity(self, product: Dict, quantity: float) -> Dict[str, float]:
         """Determine the quantity to consume based on product data
 
@@ -356,7 +405,7 @@ class BarcodeProcessor:
 
         return {
             "consume_quantity": consume_quantity,
-            "total_quantity": stock_amount
+            "total_quantity": round(stock_amount,2) or 0
         }
         
     def get_consume_open_quantity(self, product: Dict, quantity: float) -> Dict[str, float]:
@@ -381,7 +430,7 @@ class BarcodeProcessor:
 
         return {
             "consume_quantity": consume_quantity,
-            "total_quantity": stock_amount
+            "total_quantity": round(stock_amount,2) or 0
         }
     
 
@@ -405,7 +454,7 @@ class BarcodeProcessor:
         
         return {
             "consume_quantity": consume_quantity,
-            "total_quantity": stock_amount
+            "total_quantity": round(stock_amount,2) or 0
         }
     
     def get_purchase_quantity(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
@@ -419,28 +468,50 @@ class BarcodeProcessor:
         """
         # Check for quick_purchase_amount
         product_data = product.get("product", product)
+        stock_unit = product_data.get("qu_id_stock")
+        purchase_unit = product_data.get("qu_id_purchase")
         purchase_quantity = float(product_data.get("quick_purchase_amount",0) or 0)
-        logging.info(f"Setting default purchase quantity for product: {purchase_quantity}")
+        purchase_conversion = float(product.get("qu_conversion_factor_purchase_to_stock",1) or 1)
+        logging.debug(f"Setting default purchase quantity for product: {purchase_quantity}")
         stock_amount = float(product.get("stock_amount",0) or 0)
 
-        barcodes = product.get("product_barcodes",[])
-        for barcode_data in barcodes:
-            if barcode_data.get("barcode") == barcode:
-                purchase_quantity = float(barcode_data.get("amount",0) or 0)
-                logging.info(f"Setting custom purchase quantity for barcode {barcode}: {purchase_quantity}")
-                break
-            
-        logging.info(f"Product Data: {product_data}, Barcodes: {barcodes}")
+
 
         # Handle None values safely
         if purchase_quantity == 0 or purchase_quantity is None:
             purchase_quantity = quantity  # Default to 1 if quick_purchase_amount is not set
             
-        logging.info(f"Purchase: {purchase_quantity}, Stock Amount: {stock_amount}")
+        logging.debug(f"Purchase: {purchase_quantity}, Stock Amount: {stock_amount}, Conversion: {purchase_conversion}")
+        converted_purchase_quantity = purchase_quantity * purchase_conversion
+        logging.debug(f"Default purchase quantity: {converted_purchase_quantity}")
+        
+        barcodes = product.get("product_barcodes",[])
+        logging.debug(f"Product Data: {product_data}, Barcodes: {barcodes}")
+        for barcode_data in barcodes:
+            if barcode_data.get("barcode") == barcode:
+                barcode_unit = barcode_data.get("qu_id",0)
+                logging.debug(f"Barcode unit: {barcode_unit}, Purchase Unit: {purchase_unit}, Stock Unit: {stock_unit}")
 
+                if barcode_unit == stock_unit:
+                    purchase_quantity = float(barcode_data.get("amount",0) or 0)
+                    logging.debug(f"Setting custom purchase quantity for barcode (same as stock unit) {barcode}: {purchase_quantity}")
+                elif barcode_unit == purchase_unit:
+                    purchase_quantity = float(barcode_data.get("amount",0) or 0)
+                    logging.debug(f"Setting custom purchase quantity for barcode (same as purchase unit) {barcode}: {purchase_quantity}")
+                else:
+                    barcode_purchase_quantity = float(barcode_data.get("amount",0) or 0)
+                    barcode_purchase_conversion = self.find_conversion_factor(product, barcode_unit, stock_unit)
+                    if barcode_purchase_conversion: 
+                        converted_purchase_quantity = barcode_purchase_quantity * barcode_purchase_conversion
+                    else: 
+                        converted_purchase_quantity = barcode_purchase_quantity
+                    logging.debug(f"Not setting custom purchase quantity for barcode (different from purchase unit) {barcode}: Barcode Purchase Quantity: {barcode_purchase_quantity}, Barcode Conversion: {barcode_purchase_conversion}, Converted: {converted_purchase_quantity}")
+                break
+            
+        
         return {
-            "purchase_quantity": purchase_quantity or quantity,
-            "total_quantity": stock_amount
+            "purchase_quantity": converted_purchase_quantity or quantity,
+            "total_quantity": round(stock_amount,2) or 0
         }
     
     def get_shopping_quantity(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
@@ -479,7 +550,7 @@ class BarcodeProcessor:
 
         return {
             "shopping_quantity": shopping_quantity or quantity,
-            "total_quantity": stock_amount
+            "total_quantity": round(stock_amount,2) or 0
         }
     
     def get_open_quantity(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
@@ -512,7 +583,32 @@ class BarcodeProcessor:
 
         return {
             "open_quantity": open_quantity or quantity,
-            "total_quantity": stock_amount
+            "total_quantity": round(stock_amount,2) or 0
+        }
+        
+    def get_info(self, product: Dict, barcode: str, quantity: float) -> Dict[str, float]:
+        """Determine the quantity to purchase based on product data
+
+        Args:
+            product: Product data
+
+        Returns:
+            Quantity to purchase
+        """
+        
+        # Check for quick_purchase_amount
+        logging.info('')
+        logging.info(product)
+        logging.info('')
+        product_data = product.get("product", product)
+        logging.info(product_data)
+        open_quantity = float(product.get("stock_amount_opened",0) or 0)
+        stock_amount = product.get("stock_amount",0)
+
+        return {
+            "next_due_date": product.get('next_due_date'),
+            "open_quantity": open_quantity or 0,
+            "total_quantity": round(stock_amount,2) or 0
         }
     
     def get_quantity_with_unit_type(self, product: Dict, quantity: float) -> str:
@@ -531,6 +627,9 @@ class BarcodeProcessor:
         else:
             quantity_unit_type = stock_quantity_unit_name_plural
         logging.debug(f"Quantity Unit Type: {quantity_unit_type}")
+        if quantity == 0:
+            return "0 " + quantity_unit_type
+
         return str(round(quantity,1)).rstrip('0').rstrip('.').lstrip("0") + " " + quantity_unit_type
 
     def execute_product_action(self, action: str, barcode: str, product_id: int, product: Dict, quantity: float) -> Dict:
@@ -586,6 +685,15 @@ class BarcodeProcessor:
             open_quantity = stockcheck.get('open_quantity')
             result = self.grocy_client.open_product(product_id, open_quantity)
             self.feedback_manager.open(f"Opened {self.get_quantity_with_unit_type(product,open_quantity)} {product_data['name']}")
+
+        elif action == 'getinfo':
+            stockcheck = self.get_info(product, barcode, quantity)
+            logging.info(f"Getinfo quantity: {stockcheck}")
+            product_name = product_data.get('name','')
+            open_quantity = stockcheck.get('open_quantity')
+            total_quantity = stockcheck.get('total_quantity')
+            next_due_date = stockcheck.get('next_due_date')
+            self.feedback_manager.getinfo(f"Product {product_name} has {self.get_quantity_with_unit_type(product,open_quantity)} of {self.get_quantity_with_unit_type(product,total_quantity)} open, next expiration on {next_due_date}.")
 
         elif action == 'purchase':
             stockcheck = self.get_purchase_quantity(product, barcode, quantity)

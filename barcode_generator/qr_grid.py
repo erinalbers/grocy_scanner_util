@@ -16,7 +16,7 @@ from reportlab.lib.units import inch
 import qr_generator
 
 def create_qrcode_grid(qrcode_files, output_file='qrcode_grid.pdf', 
-                      page_size='letter', margin=0, columns=4, rows=4,
+                      page_size='letter', margin=0, columns=3, rows=3,
                       spacing=0, label_height=None):
     """
     Create a PDF with a grid of QR codes.
@@ -128,8 +128,8 @@ def main():
     parser.add_argument('--output-pdf', help='Path to the output PDF file (defaults to {output_dir}_grid.pdf)')
     parser.add_argument('--page-size', default='letter', choices=['letter', 'a4'], help='Page size for the PDF')
     parser.add_argument('--margin', type=float, default=0, help='Margin in inches')
-    parser.add_argument('--columns', type=int, default=4, help='Number of columns in the grid')
-    parser.add_argument('--rows', type=int, default=4, help='Number of rows in the grid')
+    parser.add_argument('--columns', type=int, default=3, help='Number of columns in the grid')
+    parser.add_argument('--rows', type=int, default=3, help='Number of rows in the grid')
     parser.add_argument('--spacing', type=float, default=0, help='Spacing between QR codes in inches')
     parser.add_argument('--label-height', type=float, help='Height of each label in inches (optional)')
     

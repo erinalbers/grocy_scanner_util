@@ -90,7 +90,7 @@ def generate_qrcode(text, output_dir='qrcodes', title=None, width=800, height=40
         
         # Try to use a system font, fall back to default if not available
         try:
-            font = ImageFont.truetype("Helvetica", 48)
+            font = ImageFont.truetype("Helvetica", 56)
         except IOError:
             font = ImageFont.load_default()
             
